@@ -88,22 +88,29 @@
         </div>
     </main>
     <script>
+        //리스트 시작 위치
         const listStyleChangeStartY = document.getElementById("list-item-wrapper").offsetTop - 400
+
+        //리스트 끝 위치
         const listStyleChangeEndY = 1375
+
         const listItems = document.querySelectorAll(".list-item")
 
-        // 한아이템당 갖는 스크롤 값
+        // 한 아이템당 갖는 스크롤 값
         const division = (listStyleChangeEndY - listStyleChangeStartY)/listItems.length
 
+        // 산타 이미지
         const panelImg = document.querySelector('.panel1-img')
         const flyingSantaImage = document.getElementById('flying-santa-image')
 
+        // 비디오
         const videoPlayBlack = 500
         const videoElement = document.getElementById("video")
         const videoSection = document.getElementById("video-section")
         const fixedWrapper = document.getElementById("fixed-wrapper")
         const fixedDescription = document.getElementById("fixed-description")
 
+        // 가운데 고정 함수
         function centerElement(elementID, video){
             const element = document.getElementById(elementID)
             const parent = element.parentElement;
@@ -122,32 +129,42 @@
                 element.style.transform = "initial"
             }
         }
+
+        //비디오 스크롤되는 높이
         videoElement.addEventListener("loadedmetadata", () => {
             document.getElementById("video-section").style.height = videoElement.duration * videoPlayBlack + "px"
         })
 
+        //비디오 하단 문구 이벤트 시작 위치, 끝나는 위치
         const fixedDescriptionAppearTiming = 2237;
         const fixedDescriptionAppearEnds = 2600;
 
+
+
         window.addEventListener("scroll", () => {
+            //리스트 문구 컬러 변경
             if (document.getElementById("on")) document.getElementById("on").removeAttribute("id")
     
             if(window.scrollY > listStyleChangeStartY && window.scrollY < listStyleChangeEndY){
                 const targetIndex = Math.round((window.scrollY - listStyleChangeStartY) / division)
                 if(listItems[targetIndex]) listItems[targetIndex].id = "on"
-           }
+            }
 
+
+           // 옆에서 나오는 산타 이미지 
            const scrollYBottom = window.scrollY + document.documentElement.clientHeight
 
            if (scrollYBottom > panelImg.offsetTop && scrollYBottom < panelImg.offsetTop + panelImg.offsetHeight + 100){
                 const translateX = 80 - 80 * 1.8 * (scrollYBottom - panelImg.offsetTop) / (panelImg.offsetHeight + 100)
                 const translateY = -13 + 13 * (scrollYBottom - panelImg.offsetTop) / (panelImg.offsetHeight + 100)
                 const rotationDegree = 23 - 23 * 1.7 * (scrollYBottom - panelImg.offsetTop) / (panelImg.offsetHeight + 100)
-
                 flyingSantaImage.style.transform = `translate(${translateX}px, ${translateY}px) rotate(${rotationDegree}deg)`
            }
 
+           //비디오 센터 고정
            centerElement("fixed-wrapper", videoElement);
+
+           //비디오 센터 고정 풀림
            if (window.scrollY > videoSection.offsetTop + videoSection.offsetHeight - (fixedWrapper.offsetHeight + (document.documentElement.clientHeight - fixedWrapper.offsetHeight)/2)){
                 fixedWrapper.style.position = "relative"
                 fixedWrapper.style.top = "initial"
@@ -155,21 +172,25 @@
                 fixedWrapper.style.transform = `translateY(${videoSection.offsetHeight - fixedWrapper.offsetHeight}px)`
            }
 
+           // 비디오 하단 문구 애니메이션 효과
            if(window.scrollY > fixedDescriptionAppearTiming && window.scrollY < fixedDescriptionAppearEnds){
-             fixedDescription.style.transform = `translateY(${fixedDescriptionAppearEnds - window.scrollY}px)`
-             //300은 임의의 수, 오퍼시티 속도에 따라 조절 하면 됨.
-             fixedDescription.style.opacity = (window.scrollY - fixedDescriptionAppearTiming) / 300
+                fixedDescription.style.transform = `translateY(${fixedDescriptionAppearEnds - window.scrollY}px)`
+                //300은 임의의 수, 오퍼시티 속도에 따라 조절 하면 됨.
+                fixedDescription.style.opacity = (window.scrollY - fixedDescriptionAppearTiming) / 300
            } else if(window.scrollY > fixedDescriptionAppearEnds){
-            fixedDescription.style.transform = `translateY(0px)`
-            fixedDescription.style.opacity = 1
+                fixedDescription.style.transform = `translateY(0px)`
+                fixedDescription.style.opacity = 1
            } else {
-            fixedDescription.style.transform = `translateY(100px)`
-            fixedDescription.style.opacity = 0
+                fixedDescription.style.transform = `translateY(100px)`
+                fixedDescription.style.opacity = 0
            }
+           
+           //beyond 센터 고정
            centerElement("bank-beyond");
 
         })  
 
+        //슬라이더 이미지 만들기
         let currentImage = 0
         const sliderImages = document.querySelectorAll(".slider-image")
         const sliderContentWrapper = document.getElementById("slider-content-wrapper")
